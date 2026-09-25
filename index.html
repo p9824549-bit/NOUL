@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Jogos</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    header {
+      margin-top: 40px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    h1 { font-size: 2.5rem; margin-bottom: 10px; }
+    p { color: #888; }
+    
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+    }
+    .game-card {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .game-card:hover {
+      transform: translateY(-5px);
+      border-color: #007bff;
+    }
+    .game-icon { font-size: 3rem; margin-bottom: 10px; }
+    .game-title { font-size: 1.2rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Meus Jogos 🎮</h1>
+    <p>Projetos e experimentos criados por mim</p>
+  </header>
+
+  <main class="games-grid">
+    <!-- Card do Infinite Craft -->
+    <a href="#" class="game-card">
+      <div class="game-icon">🧪</div>
+      <div class="game-title">Em Breve: Infinite Craft Clone</div>
+    </a>
+
+    <!-- Card do Button Clicker (Agora apontando para a página do jogo) -->
+    <a href="button-click.html" class="game-card">
+      <div class="game-icon">🖱️</div>
+      <div class="game-title">Button Clicker</div>
+    </a>
+  </main>
+
+</body>
+</html>
