@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Clicker 🖱️</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #888;
+      text-decoration: none;
+      font-size: 1rem;
+      background: #1e1e1e;
+      padding: 8px 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+    .back-btn:hover { color: #fff; border-color: #555; }
+
+    .score-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .score {
+      font-size: 4rem;
+      font-weight: bold;
+      color: #007bff;
+    }
+    .cps {
+      color: #888;
+      font-size: 1rem;
+      margin-top: 5px;
+    }
+
+    .main-button {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 4px solid #007bff;
+      background: #1e1e1e;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      outline: none;
+      box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+      transition: transform 0.05s ease;
+      user-select: none;
+    }
+    .main-button:active {
+      transform: scale(0.92);
+      background: #007bff;
+    }
+
+    .shop {
+      margin-top: 40px;
+      width: 100%;
+      max-width: 350px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .upgrade-btn {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .upgrade-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .upgrade-btn:not(:disabled):hover {
+      border-color: #007bff;
+    }
+    .upgrade-info { text-align: left; }
+    .upgrade-title { font-weight: bold; font-size: 0.95rem; }
+    .upgrade-cost { color: #888; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back-btn">← Voltar</a>
+
+  <div class="score-container">
+    <div class="score" id="score">0</div>
+    <div class="cps" id="cps">Por clique: 1 | Por seg: 0</div>
+  </div>
+
+  <button class="main-button" id="click-btn">CLIQUE!</button>
+
+  <div class="shop">
+    <button class="upgrade-btn" id="upgrade-click">
+      <div class="upgrade-info">
+        <div class="upgrade-title">⚡ Clique Potente (+1/clique)</div>
+        <div class="upgrade-cost" id="cost-click">Custo: 10 cliques</div>
+      </div>
+    </button>
+
+    <button class="upgrade-btn" id="upgrade-auto">
+      <div class="upgrade-info">
+        <div class="upgrade-title">🤖 Auto-Clicker (+1/seg)</div>
+        <div class="upgrade-cost" id="cost-auto">Custo: 50 cliques</div>
+      </div>
+    </button>
+  </div>
+
+  <script>
+    // Variáveis do Jogo
+    let score = Number(localStorage.getItem('score')) || 0;
+    let clickPower = Number(localStorage.getItem('clickPower')) || 1;
+    let autoClickers = Number(localStorage.getItem('autoClickers')) || 0;
+
+    let costClick = Number(localStorage.getItem('costClick')) || 10;
+    let costAuto = Number(localStorage.getItem('costAuto')) || 50;
+
+    // Elementos da Tela
+    const scoreEl = document.getElementById('score');
+    const cpsEl = document.getElementById('cps');
+    const clickBtn = document.getElementById('click-btn');
+    const upgradeClickBtn = document.getElementById('upgrade-click');
+    const upgradeAutoBtn = document.getElementById('upgrade-auto');
+    const costClickEl = document.getElementById('cost-click');
+    const costAutoEl = document.getElementById('cost-auto');
+
+    function updateUI() {
+      scoreEl.innerText = Math.floor(score);
+      cpsEl.innerText = `Por clique: ${clickPower} | Por seg: ${autoClickers}`;
+      costClickEl.innerText = `Custo: ${costClick} cliques`;
+      costAutoEl.innerText = `Custo: ${costAuto} cliques`;
+
+      upgradeClickBtn.disabled = score < costClick;
+      upgradeAutoBtn.disabled = score < costAuto;
+    }
+
+    function saveProgress() {
+      localStorage.setItem('score', score);
+      localStorage.setItem('clickPower', clickPower);
+      localStorage.setItem('autoClickers', autoClickers);
+      localStorage.setItem('costClick', costClick);
+      localStorage.setItem('costAuto', costAuto);
+    }
+
+    // Clique Principal
+    clickBtn.addEventListener('click', () => {
+      score += clickPower;
+      updateUI();
+      saveProgress();
+    });
+
+    // Upgrade: Clique Potente
+    upgradeClickBtn.addEventListener('click', () => {
+      if (score >= costClick) {
+        score -= costClick;
+        clickPower += 1;
+        costClick = Math.floor(costClick * 1.5);
+        updateUI();
+        saveProgress();
+      }
+    });
+
+    // Upgrade: Auto Clicker
+    upgradeAutoBtn.addEventListener('click', () => {
+      if (score >= costAuto) {
+        score -= costAuto;
+        autoClickers += 1;
+        costAuto = Math.floor(costAuto * 1.6);
+        updateUI();
+        saveProgress();
+      }
+    });
+
+    // Loop do Auto Clicker (executa a cada 1 segundo)
+    setInterval(() => {
+      if (autoClickers > 0) {
+        score += autoClickers;
+        updateUI();
+        saveProgress();
+      }
+    }, 1000);
+
+    // Inicialização
+    updateUI();
+  </script>
+</body>
+</html>
